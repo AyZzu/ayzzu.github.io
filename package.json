@@ -3,11 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://ayzzu.github.io/porto-mqst",
   "scripts": {
     "dev": "concurrently -n \"SERVER,VITE\" -c \"magenta,cyan\" \"node server.js\" \"vite\"",
     "server": "node server.js",
     "client": "vite",
     "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist --dotfiles --nojekyll",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -29,6 +32,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.6.1",
     "concurrently": "^10.0.5",
+    "gh-pages": "^6.3.0",
     "oxlint": "^1.81.0",
     "postcss": "^8.5.28",
     "tailwindcss": "^3.4.19",

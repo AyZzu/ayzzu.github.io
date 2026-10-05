@@ -10,24 +10,30 @@ import AdminApp from './components/admin/AdminApp';
 
 function App() {
   const [isAdminView, setIsAdminView] = useState(() => {
-    return window.location.pathname.startsWith('/admin') || window.location.hash === '#admin';
+    return window.location.hash === '#admin' || window.location.pathname.endsWith('/admin');
   });
 
   useEffect(() => {
-    const handlePopState = () => {
-      setIsAdminView(window.location.pathname.startsWith('/admin') || window.location.hash === '#admin');
+    const handleLocationChange = () => {
+      setIsAdminView(window.location.hash === '#admin' || window.location.pathname.endsWith('/admin'));
     };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
   }, []);
 
   const openAdmin = () => {
-    window.history.pushState({}, '', '/admin');
+    window.location.hash = 'admin';
     setIsAdminView(true);
   };
 
   const closeAdmin = () => {
-    window.history.pushState({}, '', '/');
+    if (window.location.hash === '#admin') {
+      window.history.pushState(null, '', window.location.pathname + window.location.search);
+    }
     setIsAdminView(false);
   };
 
