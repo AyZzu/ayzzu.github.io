@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://ayzzu.github.io/porto-mqst",
+  "homepage": "https://ayzzu.github.io",
   "scripts": {
     "dev": "concurrently -n \"SERVER,VITE\" -c \"magenta,cyan\" \"node server.js\" \"vite\"",
     "server": "node server.js",
