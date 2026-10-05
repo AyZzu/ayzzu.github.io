@@ -1,0 +1,147 @@
+[
+  {
+    "id": 11,
+    "title": "Design parfume Packaging",
+    "slug": "design-parfume-packaging",
+    "category": "PACKAGING DESIGN",
+    "client": "Laeta",
+    "year": "2025",
+    "status": "Published",
+    "views": 0,
+    "tags": [
+      "Packaging Desain",
+      "Parfume"
+    ],
+    "desc": "Pembuatan Desain beserta mockup parfume untuk merchendise Laeta yang akan dijual di comifuro 22",
+    "image_url": "http://localhost:5000/uploads/project-1791184011813-571248552.webp",
+    "created_at": "2026-10-05T07:06:51.000Z",
+    "images": [
+      "http://localhost:5000/uploads/project-1791184011813-571248552.webp",
+      "http://localhost:5000/uploads/project-1791184011816-392146377.webp",
+      "http://localhost:5000/uploads/project-1791184011817-820550578.webp",
+      "http://localhost:5000/uploads/project-1791184011820-787060320.webp",
+      "http://localhost:5000/uploads/project-1791184011825-922511693.webp",
+      "http://localhost:5000/uploads/project-1791184011831-813448901.webp",
+      "http://localhost:5000/uploads/project-1791184011842-962542151.webp",
+      "http://localhost:5000/uploads/project-1791184011848-930538628.webp"
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Pembuatan Logo Vtuber",
+    "slug": "pembuatan-logo-vtuber",
+    "category": "LOGO DESIGN",
+    "client": "Laeta",
+    "year": "2025",
+    "status": "Published",
+    "views": 0,
+    "tags": [
+      "Vector Logo"
+    ],
+    "desc": "Pembuatan Logo Vtuber berjumlahklan 3 vtuber",
+    "image_url": "http://localhost:5000/uploads/project-1791183646311-406120426.webp",
+    "created_at": "2026-10-05T07:00:46.000Z",
+    "images": [
+      "http://localhost:5000/uploads/project-1791183646311-406120426.webp",
+      "http://localhost:5000/uploads/project-1791183646313-202987320.webp",
+      "http://localhost:5000/uploads/project-1791183646319-571394536.webp"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Catalog Design for Merch",
+    "slug": "catalog-design-for-merch",
+    "category": "CATALOG PRODUCT BOOTH",
+    "client": "Laeta",
+    "year": "2025",
+    "status": "Published",
+    "views": 0,
+    "tags": [
+      "Catalog"
+    ],
+    "desc": "Desain catalog untuk merchendise laeta yang akan dijual di comifuro 23. ",
+    "image_url": "http://localhost:5000/uploads/project-1791181082942-846315621.png",
+    "created_at": "2026-10-05T06:18:03.000Z",
+    "images": [
+      "http://localhost:5000/uploads/project-1791181082942-846315621.png",
+      "http://localhost:5000/uploads/project-1791181083047-928012415.png",
+      "http://localhost:5000/uploads/project-1791181083216-246535902.png",
+      "http://localhost:5000/uploads/project-1791181083309-189830289.png",
+      "http://localhost:5000/uploads/project-1791181083450-350150864.png"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Bazar MCI UNAMIN - Keju Aroma & Puding Fla",
+    "slug": "bazar-mci-unamin-keju-aroma-puding-fla",
+    "category": "SOCIAL MEDIA POSTER",
+    "client": "UKM MCI UNAMIN",
+    "year": "2025",
+    "status": "Published",
+    "views": 98,
+    "tags": [
+      "Food Poster",
+      "Commercial",
+      "Bazar",
+      "Social Media"
+    ],
+    "desc": "Desain poster promosi komersial untuk kegiatan Bazar UKM MCI UNAMIN mempromosikan produk Keju Aroma dan Puding Fla.",
+    "image_url": "http://localhost:5000/uploads/project-1790955162378-321604343.png",
+    "created_at": "2026-10-05T05:13:10.000Z",
+    "images": [
+      "http://localhost:5000/uploads/project-1790955162378-321604343.png",
+      "http://localhost:5000/uploads/project-1791184078662-855082364.webp",
+      "http://localhost:5000/uploads/project-1791184078665-38782744.webp"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Divisi Programming - UKM MCI UNAMIN",
+    "slug": "divisi-programming-ukm-mci-unamin",
+    "category": "SOCIAL MEDIA POSTER",
+    "client": "UKM MCI UNAMIN",
+    "year": "2025",
+    "status": "Published",
+    "views": 142,
+    "tags": [
+      "Poster",
+      "Branding",
+      "Social Media",
+      "MCI"
+    ],
+    "desc": "Desain poster pengenalan pengurus Divisi Programming, Desain Grafis, Gamedev dan CinemaPhotography UKM Media Creative Information (MCI) Universitas Muhammadiyah Sorong dengan konsep visual neon identity.",
+    "image_url": "http://localhost:5000/uploads/project-1790954391697-506758610.png",
+    "created_at": "2026-10-05T05:13:10.000Z",
+    "images": [
+      "http://localhost:5000/uploads/project-1790954391697-506758610.png",
+      "http://localhost:5000/uploads/project-1791183702816-922373093.webp",
+      "http://localhost:5000/uploads/project-1791183702820-940532512.webp",
+      "http://localhost:5000/uploads/project-1791183702825-482881237.webp",
+      "http://localhost:5000/uploads/project-1791183702827-193240848.webp",
+      "http://localhost:5000/uploads/project-1791183702830-170076773.webp",
+      "http://localhost:5000/uploads/project-1791183702832-199891944.webp",
+      "http://localhost:5000/uploads/project-1791183702838-18023027.webp",
+      "http://localhost:5000/uploads/project-1791183702842-72196382.webp",
+      "http://localhost:5000/uploads/project-1791183702847-989143243.webp",
+      "http://localhost:5000/uploads/project-1791183702848-989395150.webp",
+      "http://localhost:5000/uploads/project-1791183702851-39111381.webp",
+      "http://localhost:5000/uploads/project-1791183702859-454902233.webp",
+      "http://localhost:5000/uploads/project-1791183702862-794255222.webp",
+      "http://localhost:5000/uploads/project-1791184576461-509232559.webp",
+      "http://localhost:5000/uploads/project-1791184576468-390246499.webp",
+      "http://localhost:5000/uploads/project-1791184576471-782877584.webp",
+      "http://localhost:5000/uploads/project-1791184576474-254908790.webp",
+      "http://localhost:5000/uploads/project-1791184576478-431174148.webp",
+      "http://localhost:5000/uploads/project-1791184576480-570996134.webp",
+      "http://localhost:5000/uploads/project-1791184576483-743249805.webp",
+      "http://localhost:5000/uploads/project-1791184576488-991669395.webp",
+      "http://localhost:5000/uploads/project-1791184576490-75875201.webp",
+      "http://localhost:5000/uploads/project-1791184576491-837245968.webp",
+      "http://localhost:5000/uploads/project-1791184576494-967640066.webp",
+      "http://localhost:5000/uploads/project-1791184576505-484883352.webp",
+      "http://localhost:5000/uploads/project-1791184576508-427800405.webp",
+      "http://localhost:5000/uploads/project-1791184576509-406656799.webp",
+      "http://localhost:5000/uploads/project-1791184576511-993315814.webp"
+    ]
+  }
+]
