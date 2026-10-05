@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Database, Plus, Layers } from 'lucide-react';
 import ProjectDetailModal from './ProjectDetailModal';
+import { fetchWorks } from '../../services/dataService';
 
 const filters = [
   "ALL", 
@@ -23,19 +24,8 @@ const Works = () => {
 
     const loadProjects = async () => {
       try {
-        let res;
-        try {
-          res = await fetch('http://localhost:5000/api/works');
-        } catch {
-          res = await fetch('/api/works');
-        }
-
-        if (res.ok) {
-          const data = await res.json();
-          setProjects(Array.isArray(data) ? data : []);
-          return;
-        }
-        throw new Error('Gagal mengambil data project');
+        const data = await fetchWorks();
+        setProjects(Array.isArray(data) ? data : []);
       } catch (err) {
         console.warn('Projects fetch error:', err);
         setProjects([]);

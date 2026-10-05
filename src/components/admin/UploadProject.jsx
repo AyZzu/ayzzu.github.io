@@ -5,6 +5,7 @@ import {
   Plus, ArrowUp, ArrowDown, Layers, Zap, Loader2
 } from 'lucide-react';
 import { convertMultipleImagesToWebP, formatBytes } from '../../utils/imageOptimizer';
+import { createWork, updateWork } from '../../services/dataService';
 
 const categoriesList = [
   "SOCIAL MEDIA POSTER",
@@ -147,48 +148,36 @@ const UploadProject = ({ onBack, onSuccess, editingProject = null }) => {
     setErrorMsg('');
 
     try {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('slug', slug);
-      formData.append('category', category);
-      formData.append('client', client);
-      formData.append('year', year);
-      formData.append('status', status);
-      formData.append('tags', tags);
-      formData.append('desc', desc);
-
-      // Existing images preserved
       const existingUrls = slides.filter(s => s.isExisting).map(s => s.previewUrl);
-      formData.append('existing_images', JSON.stringify(existingUrls));
+      const newFiles = slides.filter(s => !s.isExisting && s.file).map(s => s.file);
 
-      // Append new files for multiple carousel upload
-      slides.filter(s => !s.isExisting && s.file).forEach(s => {
-        formData.append('images', s.file);
-      });
+      const workPayload = {
+        title,
+        slug,
+        category,
+        client,
+        year,
+        status,
+        tags,
+        desc,
+        existing_images: existingUrls
+      };
 
-      const url = editingProject 
-        ? `http://localhost:5000/api/works/${editingProject.id}`
-        : 'http://localhost:5000/api/works';
-      const method = editingProject ? 'PUT' : 'POST';
-
-      let res;
-      try {
-        res = await fetch(url, { method, body: formData });
-      } catch {
-        // Fallback to relative endpoint if port 5000 direct call failed (e.g. via Vite proxy)
-        const altUrl = editingProject ? `/api/works/${editingProject.id}` : '/api/works';
-        res = await fetch(altUrl, { method, body: formData });
+      let savedProject;
+      if (editingProject) {
+        savedProject = await updateWork(editingProject.id, workPayload, newFiles, existingUrls);
+      } else {
+        savedProject = await createWork(workPayload, newFiles);
       }
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        onSuccess(data.project, !!editingProject);
+      if (savedProject) {
+        onSuccess(savedProject, !!editingProject);
       } else {
-        setErrorMsg(data.error || 'Gagal menyimpan project ke database MySQL');
+        setErrorMsg('Gagal menyimpan project.');
       }
     } catch (err) {
       console.error('Upload project error:', err);
-      setErrorMsg('Gagal terhubung ke backend server atau database MySQL! Pastikan MySQL di XAMPP dan server backend aktif.');
+      setErrorMsg(err.message || 'Gagal menyimpan project.');
     } finally {
       setIsSubmitting(false);
     }

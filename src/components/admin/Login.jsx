@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, ShieldCheck, ArrowRight, Sparkles } from 'lucide-react';
 import logoIcon from '../../assets/logo-magenta.webp';
+import { authLogin } from '../../services/dataService';
 
 // Google reCAPTCHA v2 official public demo / test sitekey (always succeeds on localhost)
 const GOOGLE_RECAPTCHA_SITEKEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
@@ -66,37 +67,17 @@ const Login = ({ onLoginSuccess, onBackToPortfolio, dbStatus }) => {
     setErrorMsg('');
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        localStorage.setItem('mqst_cms_token', data.token);
-        localStorage.setItem('mqst_cms_user', JSON.stringify(data.user));
-        onLoginSuccess(data.user);
+      const result = await authLogin(email, password);
+      if (result.success && result.user) {
+        localStorage.setItem('mqst_cms_token', result.token);
+        localStorage.setItem('mqst_cms_user', JSON.stringify(result.user));
+        onLoginSuccess(result.user);
       } else {
-        setErrorMsg(data.message || 'Email atau password salah');
+        setErrorMsg(result.message || 'Email atau password salah');
       }
-    } catch {
-      // Fallback local authentication if backend is offline
-      if (
-        (email === 'muqsit@mqst.design' || email === 'admin@mqst.design' || email === 'admin') &&
-        (password === 'mqst2025' || password === 'admin' || password === '123456')
-      ) {
-        const mockUser = {
-          name: 'Muqsit Faiz',
-          email: email,
-          role: 'Lead Art Director'
-        };
-        localStorage.setItem('mqst_cms_token', 'local-token');
-        localStorage.setItem('mqst_cms_user', JSON.stringify(mockUser));
-        onLoginSuccess(mockUser);
-      } else {
-        setErrorMsg('Gagal terhubung atau password salah (Gunakan: muqsit@mqst.design / mqst2025)');
-      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setErrorMsg(err.message || 'Gagal login.');
     } finally {
       setIsLoading(false);
     }

@@ -3,6 +3,7 @@ import {
   Users, UserPlus, Shield, Mail, Key, Trash2, Edit3, 
   CheckCircle2, XCircle, Search, RefreshCw, X, AlertCircle 
 } from 'lucide-react';
+import { fetchUsers, createUser, updateUser, deleteUser } from '../../services/dataService';
 
 const UserManagement = ({ currentUser }) => {
   const [users, setUsers] = useState([]);
@@ -23,26 +24,21 @@ const UserManagement = ({ currentUser }) => {
     status: 'active'
   });
 
-  const fetchUsers = async () => {
+  const loadUsers = async () => {
     setLoading(true);
     setErrorMsg('');
     try {
-      const res = await fetch('http://localhost:5000/api/users');
-      if (res.ok) {
-        const data = await res.json();
-        setUsers(data);
-      } else {
-        setErrorMsg('Gagal memuat daftar user dari database.');
-      }
-    } catch {
-      setErrorMsg('Tidak dapat terhubung ke server backend.');
+      const data = await fetchUsers();
+      setUsers(Array.isArray(data) ? data : []);
+    } catch (err) {
+      setErrorMsg(err.message || 'Gagal memuat daftar user.');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUsers();
+    loadUsers();
   }, []);
 
   const openAddModal = () => {
@@ -88,23 +84,10 @@ const UserManagement = ({ currentUser }) => {
     }
 
     try {
-      const url = modalMode === 'add' 
-        ? 'http://localhost:5000/api/users' 
-        : `http://localhost:5000/api/users/${selectedUser.id}`;
-      
-      const method = modalMode === 'add' ? 'POST' : 'PUT';
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        setErrorMsg(result.error || 'Terjadi kesalahan saat menyimpan user.');
-        return;
+      if (modalMode === 'add') {
+        await createUser(formData);
+      } else {
+        await updateUser(selectedUser.id, formData);
       }
 
       setShowModal(false);
@@ -114,9 +97,9 @@ const UserManagement = ({ currentUser }) => {
           : `User "${formData.name}" berhasil diperbarui!`
       );
       setTimeout(() => setSuccessMsg(''), 4000);
-      fetchUsers();
-    } catch {
-      setErrorMsg('Gagal mengirim data ke server.');
+      loadUsers();
+    } catch (err) {
+      setErrorMsg(err.message || 'Gagal menyimpan user.');
     }
   };
 
@@ -131,21 +114,12 @@ const UserManagement = ({ currentUser }) => {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/users/${user.id}`, {
-        method: 'DELETE'
-      });
-      const result = await res.json();
-
-      if (!res.ok) {
-        alert(result.error || 'Gagal menghapus user');
-        return;
-      }
-
-      setSuccessMsg(`User "${user.name}" berhasil dihapus dari database.`);
+      await deleteUser(user.id);
+      setSuccessMsg(`User "${user.name}" berhasil dihapus.`);
       setTimeout(() => setSuccessMsg(''), 4000);
-      fetchUsers();
-    } catch {
-      alert('Gagal menghubungi server.');
+      loadUsers();
+    } catch (err) {
+      alert(err.message || 'Gagal menghapus user.');
     }
   };
 

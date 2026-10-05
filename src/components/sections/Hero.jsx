@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Mail, FileText, X, UploadCloud } from 'lucide-react';
 import CvModal from './CvModal';
+import { fetchCv } from '../../services/dataService';
 
 const Hero = () => {
   const [cvData, setCvData] = useState(null);
@@ -9,31 +10,11 @@ const Hero = () => {
   const [showNoCvModal, setShowNoCvModal] = useState(false);
 
   useEffect(() => {
-    // Check backend first
-    fetch('http://localhost:5000/api/cv')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.success && data.cv_url) {
-          setCvData(data);
-        } else {
-          checkLocalCv();
-        }
-      })
-      .catch(() => {
-        checkLocalCv();
-      });
-
-    const checkLocalCv = () => {
-      const local = localStorage.getItem('mqst_cv_data');
-      if (local) {
-        try {
-          const parsed = JSON.parse(local);
-          if (parsed && parsed.cv_url) {
-            setCvData(parsed);
-          }
-        } catch {}
+    fetchCv().then(data => {
+      if (data && data.cv_url) {
+        setCvData(data);
       }
-    };
+    });
   }, []);
 
   const handleViewCv = async () => {
@@ -42,28 +23,12 @@ const Hero = () => {
     // Fresh fetch check if not already loaded
     if (!current?.cv_url) {
       try {
-        const res = await fetch('http://localhost:5000/api/cv');
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.success && data.cv_url) {
-            current = data;
-            setCvData(data);
-          }
+        const data = await fetchCv();
+        if (data && data.cv_url) {
+          current = data;
+          setCvData(data);
         }
       } catch {}
-
-      if (!current?.cv_url) {
-        const local = localStorage.getItem('mqst_cv_data');
-        if (local) {
-          try {
-            const parsed = JSON.parse(local);
-            if (parsed && parsed.cv_url) {
-              current = parsed;
-              setCvData(parsed);
-            }
-          } catch {}
-        }
-      }
     }
 
     if (current && current.cv_url) {

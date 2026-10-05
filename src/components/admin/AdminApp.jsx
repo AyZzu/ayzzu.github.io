@@ -8,6 +8,8 @@ import UploadProject from './UploadProject';
 import AdminDashboard from './AdminDashboard';
 import UserManagement from './UserManagement';
 import CvManagement from './CvManagement';
+import { fetchWorks, deleteWork } from '../../services/dataService';
+import { isSupabaseConfigured, testSupabaseConnection } from '../../utils/supabaseClient';
 
 const AdminApp = ({ onBackToPortfolio }) => {
   const [currentUser, setCurrentUser] = useState(() => {
@@ -22,38 +24,31 @@ const AdminApp = ({ onBackToPortfolio }) => {
   const [toastMessage, setToastMessage] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Fetch status and projects from backend
+  // Fetch status and projects
   const fetchProjects = async () => {
     try {
-      let res;
-      try {
-        res = await fetch('http://localhost:5000/api/works');
-      } catch {
-        res = await fetch('/api/works');
-      }
-      if (res.ok) {
-        const data = await res.json();
-        setProjects(Array.isArray(data) ? data : []);
-      }
+      const data = await fetchWorks();
+      setProjects(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.warn('Backend not responding', err);
+      console.warn('Projects fetch error:', err);
     }
   };
 
   useEffect(() => {
-    // Check backend health
     const checkStatus = async () => {
-      try {
-        let res;
+      if (isSupabaseConfigured()) {
         try {
-          res = await fetch('http://localhost:5000/api/status');
+          const test = await testSupabaseConnection();
+          setDbStatus({ 
+            mysql: test.success ? 'ONLINE' : 'OFFLINE',
+            supabase: test.success ? 'ONLINE' : 'ERROR',
+            message: test.message 
+          });
         } catch {
-          res = await fetch('/api/status');
+          setDbStatus({ mysql: 'OFFLINE', supabase: 'ERROR' });
         }
-        const data = await res.json();
-        setDbStatus(data);
-      } catch {
-        setDbStatus({ mysql: 'OFFLINE' });
+      } else {
+        setDbStatus({ mysql: 'OFFLINE', supabase: 'NOT_CONFIGURED' });
       }
     };
 
@@ -95,9 +90,9 @@ const AdminApp = ({ onBackToPortfolio }) => {
   const handleDeleteProject = async (id) => {
     if (!window.confirm('Yakin ingin menghapus project ini dari portfolio?')) return;
     try {
-      await fetch(`http://localhost:5000/api/works/${id}`, { method: 'DELETE' });
-    } catch {
-      // ignore
+      await deleteWork(id);
+    } catch (err) {
+      console.error('Delete work error:', err);
     }
     setProjects(prev => prev.filter(p => p.id !== id));
     setToastMessage('Project berhasil dihapus dari database.');

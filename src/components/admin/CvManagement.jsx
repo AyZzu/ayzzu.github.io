@@ -4,6 +4,7 @@ import {
   Download, Eye, AlertCircle, RefreshCw, FileCheck, Sparkles 
 } from 'lucide-react';
 import CvModal from '../sections/CvModal';
+import { fetchCv, uploadCv, deleteCv } from '../../services/dataService';
 
 const CvManagement = () => {
   const [cvData, setCvData] = useState(null);
@@ -15,38 +16,25 @@ const CvManagement = () => {
   const fileInputRef = useRef(null);
 
   // Fetch current CV
-  const fetchCv = async () => {
+  const loadCv = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/cv');
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.success && data.cv_url) {
-          setCvData(data);
-          localStorage.setItem('mqst_cv_data', JSON.stringify(data));
-          setIsLoading(false);
-          return;
-        }
-      }
-    } catch {
-      // Backend offline, fallback to localStorage
-    }
-
-    const localData = localStorage.getItem('mqst_cv_data');
-    if (localData) {
-      try {
-        setCvData(JSON.parse(localData));
-      } catch {
+      const data = await fetchCv();
+      if (data && data.cv_url) {
+        setCvData(data);
+      } else {
         setCvData(null);
       }
-    } else {
+    } catch (err) {
+      console.warn('Error fetching CV:', err);
       setCvData(null);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchCv();
+    loadCv();
   }, []);
 
   const handleFileUpload = async (file) => {
@@ -61,65 +49,29 @@ const CvManagement = () => {
     setIsUploading(true);
     setStatusMessage({ type: '', text: '' });
 
-    // Create a local data URL as immediate fallback
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const dataUrl = e.target.result;
-      const fallbackPayload = {
-        success: true,
-        cv_url: dataUrl,
-        filename: file.name,
-        original_name: file.name,
-        size: file.size,
-        mimetype: file.type,
-        updated_at: new Date().toISOString()
-      };
-
-      try {
-        const formData = new FormData();
-        formData.append('cv', file);
-
-        const res = await fetch('http://localhost:5000/api/cv', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (res.ok) {
-          const result = await res.json();
-          setCvData(result);
-          localStorage.setItem('mqst_cv_data', JSON.stringify(result));
-          setStatusMessage({ type: 'success', text: `CV "${file.name}" berhasil diunggah ke server & siap diunduh pengunjung!` });
-        } else {
-          // If server failed, save fallback to localStorage
-          setCvData(fallbackPayload);
-          localStorage.setItem('mqst_cv_data', JSON.stringify(fallbackPayload));
-          setStatusMessage({ type: 'success', text: `CV "${file.name}" tersimpan secara lokal dan langsung aktif di tombol Lihat CV!` });
-        }
-      } catch {
-        // Network offline, save fallback to localStorage
-        setCvData(fallbackPayload);
-        localStorage.setItem('mqst_cv_data', JSON.stringify(fallbackPayload));
-        setStatusMessage({ type: 'success', text: `CV "${file.name}" tersimpan di browser dan langsung aktif di tombol Lihat CV!` });
-      } finally {
-        setIsUploading(false);
-        setTimeout(() => setStatusMessage({ type: '', text: '' }), 5000);
-      }
-    };
-    reader.readAsDataURL(file);
+    try {
+      const result = await uploadCv(file);
+      setCvData(result);
+      setStatusMessage({ type: 'success', text: `CV "${file.name}" berhasil diunggah & siap diunduh pengunjung!` });
+    } catch (err) {
+      console.error('Upload CV error:', err);
+      setStatusMessage({ type: 'error', text: err.message || 'Gagal mengunggah CV.' });
+    } finally {
+      setIsUploading(false);
+      setTimeout(() => setStatusMessage({ type: '', text: '' }), 5000);
+    }
   };
 
   const handleDeleteCv = async () => {
     if (!window.confirm('Yakin ingin menghapus CV ini dari portfolio?')) return;
 
     try {
-      await fetch('http://localhost:5000/api/cv', { method: 'DELETE' });
-    } catch {
-      // ignore
+      await deleteCv();
+      setCvData(null);
+      setStatusMessage({ type: 'info', text: 'File CV berhasil dihapus dari sistem.' });
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: err.message || 'Gagal menghapus CV.' });
     }
-
-    localStorage.removeItem('mqst_cv_data');
-    setCvData(null);
-    setStatusMessage({ type: 'info', text: 'File CV berhasil dihapus dari sistem.' });
     setTimeout(() => setStatusMessage({ type: '', text: '' }), 4000);
   };
 
